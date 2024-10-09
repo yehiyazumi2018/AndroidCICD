@@ -33,6 +33,8 @@ android {
     kotlinOptions {
         jvmTarget = "17"
     }
+    buildToolsVersion = "35.0.0"
+    ndkVersion = "28.0.12433566 rc1"
 
 }
 
