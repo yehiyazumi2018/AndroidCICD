@@ -13,14 +13,18 @@ jobs:
       - name: Checkout the code
         uses: actions/checkout@v4.2.1
 
+      - name: Make gradlew executable
+        run: chmod +x ./gradlew  # Add this step to change permissions
+
       - name: Run Lint
-        run: ./gradlew lintDebug  # Changed .\ to ./
+        run: ./gradlew lintDebug  # Run lint command
 
       - name: Upload html test report
         uses: actions/upload-artifact@v3
         with:
           name: lint.html
           path: app/build/reports/lint-results-debug.html
+
 
 
 
