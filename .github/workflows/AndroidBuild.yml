@@ -13,7 +13,7 @@ jobs:
       - name: Checkout the code
         uses: actions/checkout@v4.2.1
 
-      - name: set up JDK 17
+      - name: Set up JDK 17
         uses: actions/setup-java@v3
         with:
           java-version: '17'
@@ -21,12 +21,12 @@ jobs:
           cache: gradle
 
       - name: Make gradlew executable
-        run: chmod +x ./gradlew  # Add this step to change permissions
+        run: chmod +x ./gradlew  # Ensure gradlew is executable
 
       - name: Run Lint
         run: ./gradlew lintDebug  # Run lint command
 
-      - name: Upload html test report
+      - name: Upload HTML lint report
         uses: actions/upload-artifact@v3
         with:
           name: lint.html
@@ -39,17 +39,25 @@ jobs:
       - name: Checkout the code
         uses: actions/checkout@v4.2.1
 
+      - name: Set up JDK 17
+        uses: actions/setup-java@v3
+        with:
+          java-version: '17'
+          distribution: 'temurin'
+          cache: gradle
+
+      - name: Make gradlew executable
+        run: chmod +x ./gradlew  # Add this before running tests
+
       - name: Run tests
         run: ./gradlew test  # Run unit test command
 
-      - name: Make gradlew executable
-        run: chmod +x ./gradlew  # Add this step to change permissions
-
-      - name: Upload html test report
+      - name: Upload HTML test report
         uses: actions/upload-artifact@v3
         with:
           name: unit_test_report
           path: app/build/reports/tests/testDebugUnitTest/
+
 
 
 #jobs:
