@@ -58,6 +58,29 @@ jobs:
           name: unit_test_report
           path: app/build/reports/tests/testDebugUnitTest/
 
+  instrumentation-test:
+    needs: [unit-test]
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout the code
+        uses: actions/checkout@v4.2.1
+
+      - name: Make gradlew executable
+        run: chmod +x ./gradlew  # Add this before running tests
+
+      - name: Run espresso tests
+        uses: reactivecircus/android-emulator-runner@v2
+        with:
+          api-level: 29
+          script: ./gradlew connectedCheck
+
+      - name: Upload HTML test report
+        uses: actions/upload-artifact@v3
+        with:
+          name: instrumentation_test_report
+          path: app/build/reports/androidTests/connected/debug
+
+
 
 
 #jobs:
