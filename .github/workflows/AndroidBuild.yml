@@ -82,7 +82,7 @@ jobs:
         uses: actions/upload-artifact@v3
         with:
           name: instrumentation_test_report
-          path: app/build/reports/androidTests/connected/debug
+          path: app/build/reports/androidTests/connected/
 
 
 #jobs:
