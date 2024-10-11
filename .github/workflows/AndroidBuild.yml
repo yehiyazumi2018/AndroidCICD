@@ -104,10 +104,10 @@ jobs:
       - name: Make gradlew executable
         run: chmod +x ./gradlew
 
-#      - name: SonarCloud Scan
-#        run: ./gradlew app:sonarqube --warning-mode all -Dsonar.login=${{ secrets.SONAR_TOKEN }}
-#        env:
-#          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+      - name: SonarCloud Scan
+        run: ./gradlew app:sonarqube --warning-mode all -Dsonar.login=${{ secrets.SONAR_TOKEN }}
+        env:
+          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
 
   package:
     needs: [static-code-analysis]
