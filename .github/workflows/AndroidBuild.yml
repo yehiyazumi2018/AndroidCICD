@@ -72,7 +72,7 @@ jobs:
           distribution: 'temurin'
           cache: gradle
 
-      - name: Make gradlew executable
+      - name: Make gradlew executable #
         run: chmod +x ./gradlew
 
       - name: Run espresso tests
