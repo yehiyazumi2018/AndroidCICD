@@ -75,20 +75,22 @@ jobs:
       - name: Make gradlew executable
         run: chmod +x ./gradlew
 
-      - name: Clean Gradle cache
-        run: ./gradlew clean
-
-      - name: Install Android SDK Tools
-        run: sdkmanager "platform-tools" "platforms;android-24" "system-images;android-24;google_apis;x86"
-
-      - name: Run espresso tests
-        uses: reactivecircus/android-emulator-runner@v2
+      - name: Set up Android SDK
+        uses: android-actions/setup-android@v3
         with:
-          api-level: 23  # Lower API level to 23 for faster boot times
-          disk-size: 6144M  # Increased disk size for emulator
-          memory: 2048M     # Allocate 2GB RAM for emulator
-          script: ./gradlew connectedCheck
-          emulator-options: "-no-boot-anim -no-snapshot -noaudio -no-window -gpu off -timeout 1200"  # Increased timeout to 1200 seconds
+          api-level: 24
+          build-tools: 30.0.2
+
+      - name: List available devices
+        run: adb devices
+
+      - name: Set physical device (optional)
+        run: adb -s samsung SM-F127G wait-for-device  # Replace <your-device-name> with your actual device name
+
+      - name: Run tests on physical device
+        run: adb -s samsung SM-F127G shell am instrument -w com.yehiya.androidcicd/androidx.test.runner.AndroidJUnitRunner
+        env:
+          ANDROID_SERIAL: samsung SM-F127G  # Set this environment variable to ensure Gradle uses the correct device
 
       - name: Upload HTML test report
         uses: actions/upload-artifact@v3
@@ -96,37 +98,6 @@ jobs:
           name: instrumentation_test_report
           path: app/build/reports/androidTests/connected/debug/
 
-  debug-instrumentation-test:
-    if: failure()
-    runs-on: ubuntu-latest
-    steps:
-      - name: Checkout the code
-        uses: actions/checkout@v4.2.1
-
-      - name: Set up JDK 17
-        uses: actions/setup-java@v3
-        with:
-          java-version: '17'
-          distribution: 'temurin'
-          cache: gradle
-
-      - name: Make gradlew executable
-        run: chmod +x ./gradlew
-
-      - name: Run espresso tests with debug info
-        uses: reactivecircus/android-emulator-runner@v2
-        with:
-          api-level: 23
-          disk-size: 6144M
-          memory: 2048M
-          script: ./gradlew connectedCheck --debug  # Add --debug for more detailed logging
-          emulator-options: "-no-boot-anim -no-snapshot -noaudio -no-window -gpu off -timeout 1200"  # Increased timeout to 1200 seconds
-
-      - name: Upload detailed test report
-        uses: actions/upload-artifact@v3
-        with:
-          name: debug_instrumentation_test_report
-          path: app/build/reports/androidTests/connected/debug/
 
 
 
