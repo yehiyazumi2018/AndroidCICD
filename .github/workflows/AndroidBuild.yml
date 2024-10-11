@@ -85,12 +85,18 @@ jobs:
         run: adb devices
 
       - name: Set physical device (optional)
-        run: adb -s samsung SM-F127G wait-for-device  # Replace <your-device-name> with your actual device name
+        run: |
+          # Replace the following with the actual device serial number obtained from 'adb devices'
+          DEVICE_SERIAL=1234567890  
+          adb -s $DEVICE_SERIAL wait-for-device
 
       - name: Run tests on physical device
-        run: adb -s samsung SM-F127G shell am instrument -w com.yehiya.androidcicd/androidx.test.runner.AndroidJUnitRunner
+        run: |
+          # Replace the following with the actual device serial number obtained from 'adb devices'
+          DEVICE_SERIAL=1234567890  
+          adb -s $DEVICE_SERIAL shell am instrument -w com.yehiya.androidcicd/androidx.test.runner.AndroidJUnitRunner
         env:
-          ANDROID_SERIAL: samsung SM-F127G  # Set this environment variable to ensure Gradle uses the correct device
+          ANDROID_SERIAL: $DEVICE_SERIAL  # Set this environment variable to ensure Gradle uses the correct device
 
       - name: Upload HTML test report
         uses: actions/upload-artifact@v3
