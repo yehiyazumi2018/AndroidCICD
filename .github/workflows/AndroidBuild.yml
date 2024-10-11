@@ -75,23 +75,14 @@ jobs:
       - name: Make gradlew executable
         run: chmod +x ./gradlew
 
-      - name: Set up Android SDK
-        run: |
-          echo "y" | sdkmanager --install "system-images;android-31;google_apis;x86_64" # Install the system image
-          sdkmanager --licenses || true # Accept licenses
-
-      - name: Start emulator
-        run: |
-          echo "no" | sdkmanager --install "emulator" # Install emulator
-          $ANDROID_HOME/emulator/emulator -avd test -no-snapshot-load -no-audio -no-window & # Start emulator
-          adb wait-for-device # Wait for the emulator to boot
-          adb shell input keyevent 82 # Unlock the device
-
       - name: Run espresso tests
-        run: ./gradlew connectedCheck
+        uses: reactivecircus/android-emulator-runner@v2
+        with:
+          api-level: 29
+          script: ./gradlew connectedCheck
 
       - name: Upload test report
-        uses: actions/upload-artifact@v3
+        uses: actions/upload-artifact@v2
         with:
           name: instrumentation_test_report
           path: app/build/reports/androidTests/connected/
